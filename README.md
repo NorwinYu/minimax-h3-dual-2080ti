@@ -114,6 +114,8 @@ examples/manifest.template.json  成片 manifest 模板（R2V，自备参考图�
 docs/                          架构 / 性能 / 流水线 / ComfyUI 补丁
 ```
 
+根目录还有 `AGENTS.md` / `CLAUDE.md`，给 AI 编程代理用（含命令、约束、踩坑清单）。
+
 ## 许可与第三方
 
 本仓库代码为 MIT（见 `LICENSE`）。ComfyUI 及若干自定义节点为 GPL / MIT / Apache，见 `THIRD_PARTY_NOTICES.md`。模型权重不在本仓库，遵循各自许可。
