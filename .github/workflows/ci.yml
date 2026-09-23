@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Python 语法检查
+        run: |
+          find . -name "*.py" -not -path "*__pycache__*" -exec python -m py_compile {} +
+
+      - name: JSON 合法性检查
+        run: |
+          python -c "import json,glob,sys; [json.load(open(f)) for f in glob.glob('examples/*.json')]"
+
+      - name: Shell 语法检查
+        run: |
+          for f in scripts/*.sh; do bash -n "$f" || exit 1; done

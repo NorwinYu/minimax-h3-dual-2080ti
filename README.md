@@ -1,5 +1,8 @@
 # MiniMax H3 · 双 RTX 2080 Ti
 
+[![CI](https://github.com/NorwinYu/minimax-h3-dual-2080ti/actions/workflows/ci.yml/badge.svg)](https://github.com/NorwinYu/minimax-h3-dual-2080ti/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 在两张 **22 GB 改显存的 RTX 2080 Ti（sm_75，NVLink）**上本地运行 **MiniMax H3**（20B 视频+音频联合流式 Transformer）。W4A8 量化让它装得下，张量并行（TP2）让两张卡同时干活。
 
 ## 性能对比（同一样本，实测）
