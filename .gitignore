@@ -1,0 +1,40 @@
+# Runtime
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Model weights & assets — NEVER commit
+*.safetensors
+*.gguf
+*.bin
+*.pt
+*.pth
+*.ckpt
+*.onnx
+asr/
+
+# Generated media
+*.mp4
+*.wav
+*.mp3
+*.flac
+*.ogg
+
+# Reference images & user assets — supply your own
+*.png
+*.jpg
+*.jpeg
+*.webp
+reference_*.png
+
+# Local state / logs
+*.log
+*_production.json
+pid_*.txt
+prompt_id*.txt
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store

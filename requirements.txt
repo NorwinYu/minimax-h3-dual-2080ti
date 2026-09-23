@@ -1,0 +1,13 @@
+# Python deps for the scripts/probes in this repo.
+#
+# torch / torchvision / torchaudio are NOT pinned here: on RTX 2080 Ti (sm_75)
+# they must come from the cu130 build. Install them with scripts/setup_env.sh,
+# which uses a China-accessible mirror. If you already have a working ComfyUI
+# venv, most of these are already present.
+
+av
+numpy
+Pillow
+safetensors
+transformers
+huggingface_hub

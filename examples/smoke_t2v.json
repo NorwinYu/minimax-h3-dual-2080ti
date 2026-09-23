@@ -1,0 +1,226 @@
+{
+  "1": {
+    "class_type": "MiniMaxH3FP16LoaderStar7",
+    "_meta": {
+      "title": "W4A8 DiT loader (Turing FP16/quant-aware)"
+    },
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_w4a8_mixed.safetensors"
+    }
+  },
+  "2": {
+    "class_type": "LoraLoaderModelOnly",
+    "_meta": {
+      "title": "Turbo 4-step LoRA"
+    },
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "lora_name": "minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16.safetensors",
+      "strength_model": 1.0
+    }
+  },
+  "3": {
+    "class_type": "MiniMaxH3ActivationChunkStar7",
+    "_meta": {
+      "title": "Activation chunking + attention (SM75 tuning from handbook)"
+    },
+    "inputs": {
+      "model": [
+        "2",
+        0
+      ],
+      "chunk_tokens": 8192,
+      "auto_halve_on_oom": true,
+      "verbose": true,
+      "mlp_chunk_tokens": 4096,
+      "disable_dynamic_prefetch": "off",
+      "qkv_chunk_tokens": 4096,
+      "out_proj_chunk_tokens": 4096,
+      "reuse_mlp_weights": true,
+      "attention_backend": "comfy_kitchen_int8"
+    }
+  },
+  "4": {
+    "class_type": "MiniMaxH3SigmaShift",
+    "_meta": {
+      "title": "video shift 12 / audio shift 3"
+    },
+    "inputs": {
+      "model": [
+        "3",
+        0
+      ],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+    }
+  },
+  "5": {
+    "class_type": "ClipProjLoader",
+    "_meta": {
+      "title": "Qwen3-VL-4B on cuda:0 + v3.1 projection"
+    },
+    "inputs": {
+      "clip_name": "qwen3vl_4b_fp8_scaled.safetensors",
+      "type": "auto",
+      "projection": "mmh3-4b-ClipProj-v3.1.safetensors",
+      "device": "cuda:0",
+      "mode": "resident"
+    }
+  },
+  "6": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+    }
+  },
+  "7": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+    }
+  },
+  "8": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "_meta": {
+      "title": "T2V conditioning (no first_frame => text-to-video)"
+    },
+    "inputs": {
+      "clip": [
+        "5",
+        0
+      ],
+      "vae": [
+        "6",
+        0
+      ],
+      "prompt": "A red rubber ball rolls slowly across a wooden table in a sunlit room, stopping at the edge. Soft ambient room tone, and the low rumble of the ball rolling on wood.",
+      "width": 640,
+      "height": 352,
+      "length": 124
+    }
+  },
+  "9": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 42
+    }
+  },
+  "10": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "105",
+        0
+      ],
+      "conditioning": [
+        "8",
+        0
+      ]
+    }
+  },
+  "11": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "105",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 4,
+      "denoise": 1.0
+    }
+  },
+  "12": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "euler"
+    }
+  },
+  "13": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "9",
+        0
+      ],
+      "guider": [
+        "10",
+        0
+      ],
+      "sampler": [
+        "12",
+        0
+      ],
+      "sigmas": [
+        "11",
+        0
+      ],
+      "latent_image": [
+        "8",
+        1
+      ]
+    }
+  },
+  "14": {
+    "class_type": "MiniMaxH3ChunkedDecodeStar7",
+    "_meta": {
+      "title": "decode video+audio latents"
+    },
+    "inputs": {
+      "av_latent": [
+        "13",
+        0
+      ],
+      "video_vae": [
+        "6",
+        0
+      ],
+      "audio_vae": [
+        "7",
+        0
+      ]
+    }
+  },
+  "15": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "14",
+        0
+      ],
+      "fps": 24.0,
+      "audio": [
+        "14",
+        1
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "15",
+        0
+      ],
+      "filename_prefix": "smoke",
+      "format": "auto",
+      "codec": "auto"
+    }
+  },
+  "105": {
+    "class_type": "MiniMaxH3TP2",
+    "_meta": {
+      "title": "TP2 dual-GPU tensor parallel (one thread per rank)"
+    },
+    "inputs": {
+      "model": [
+        "4",
+        0
+      ],
+      "replica_device": "cuda:1"
+    }
+  }
+}
