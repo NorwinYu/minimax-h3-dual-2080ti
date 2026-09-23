@@ -1,0 +1,50 @@
+{
+  "title": "Sample Film",
+  "title_en": "Sample Film",
+  "logline": "A red paper boat drifts down a rainy street gutter toward the sea.",
+  "runtime_seconds": 5.17,
+  "width": 864,
+  "height": 480,
+  "fps": 24,
+  "frames_per_shot": 124,
+  "steps": 4,
+  "attention": "comfy_kitchen_int8",
+  "lora": "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+  "dit": "minimax_h3_ref2va_pruned_w4a8_mixed.safetensors",
+  "encoder": "qwen3vl_4b_fp8_scaled.safetensors",
+  "projection": "mmh3-4b-ClipProj-v3.1.safetensors",
+  "ref_image_size": "match",
+  "base_seed": 42,
+  "reference_image": "your_character.png",
+  "_note": "这是一个最小可用的 manifest 模板。reference_image 换成你自己的参考图（放进 ComfyUI/input/）。prompt 里的 {BOAT} 会被 props 里的 BOAT 逐字展开，保证所有镜头用同一套措辞。expect 是 QA 正向锚点（3 个词），must_not 是负向门禁（命中即判失败）。",
+  "shots": [
+    {
+      "slug": "s1_drift",
+      "act": "Act 1 · Setup",
+      "beat": "The boat sets out",
+      "start": "0:00",
+      "shot": "Low camera following the water surface",
+      "audio": "Rain on pavement, water rushing in the gutter",
+      "prompt": "<Picture 1> is the subject reference and drives its appearance only: {BOAT}. Ignore the reference background. A {BOAT} bobs and drifts down a rain-slick street gutter, streetlights reflecting in the ripples. Shot: low camera tracking the water surface, shallow depth of field, cool blue night light. Audio: rain on pavement and water rushing in the gutter.",
+      "expect": [
+        "boat",
+        "water",
+        "rain"
+      ],
+      "use_environment": false,
+      "must_not": [
+        "human",
+        "person",
+        "hand",
+        "subtitle",
+        "text",
+        "watermark"
+      ]
+    }
+  ],
+  "props": {
+    "BOAT": "a small red folded paper boat"
+  },
+  "_qa_note": "expect 只放 3 个场景锚点，避免假阴性；must_not 档住人、字幕、水印这类真实崩坏。",
+  "_prompt_convention": "<Picture 1> 只给身份，场景由文字描述决定；{KEY} 占位符由 props 逐字展开。"
+}

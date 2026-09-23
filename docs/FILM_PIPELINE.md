@@ -28,13 +28,13 @@ with the 4B vision encoder (captions) and local Whisper (dialogue) instead of ey
 
 ```bash
 # one shot, tensor-parallel across two cards
-python scripts/run_film.py --manifest path/to/your_manifest.json --tp2 --only <slug>
+python scripts/run_film.py --manifest examples/manifest.template.json --tp2 --only <slug>
 
 # the whole film
-python scripts/run_film.py --manifest path/to/your_manifest.json --tp2
+python scripts/run_film.py --manifest examples/manifest.template.json --tp2
 
 # re-caption existing shots without rendering
-python scripts/multiframe_qa.py --manifest path/to/your_manifest.json --frac 0.3,0.5,0.7
+python scripts/multiframe_qa.py --manifest examples/manifest.template.json --frac 0.3,0.5,0.7
 
 # verify dialogue
 H3_ASR_MODEL=/path/to/whisper-small python scripts/asr_check.py /path/to/film_<slug>_00001_.mp4

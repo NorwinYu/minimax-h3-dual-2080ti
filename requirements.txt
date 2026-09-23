@@ -11,3 +11,4 @@ Pillow
 safetensors
 transformers
 huggingface_hub
+imageio_ffmpeg

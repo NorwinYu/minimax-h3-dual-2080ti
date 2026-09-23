@@ -99,8 +99,8 @@ CUDA_VISIBLE_DEVICES=1,0 python main.py --listen 127.0.0.1 --port 8188 \
 # 2. 跑 smoke sample（文生视频，无需任何参考图/个人素材）
 python scripts/bench.py examples/smoke_t2v.json smoke
 
-# 3. 想跑自己的成片（R2V，需要自备 manifest + 参考图）
-python scripts/run_film.py --manifest path/to/your_manifest.json --tp2
+# 3. 跑自己的成片（R2V，先照 examples/manifest.template.json 改成自己的参考图 + 剧本）
+python scripts/run_film.py --manifest examples/manifest.template.json --tp2
 ```
 
 ## 目录结构
@@ -110,6 +110,7 @@ custom_nodes/comfyui-h3-tp2/   TP2 节点（切分 + 一卡一线程 forward）
 scripts/                       成片流水线、QA、ASR、基准、启动器
 probes/                        支撑架构结论的诊断实验
 examples/smoke_t2v.json        自包含 smoke sample（文生视频）
+examples/manifest.template.json  成片 manifest 模板（R2V，自备参考图）
 docs/                          架构 / 性能 / 流水线 / ComfyUI 补丁
 ```
 
